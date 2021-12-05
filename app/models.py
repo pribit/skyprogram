@@ -12,8 +12,6 @@ class User(db.Model):
 
 
 class Post(db.Model):
-    __searchable__ = ['content']
-
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -56,6 +54,8 @@ class Bookmark(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+
+    post = db.relationship('Post', backref=db.backref('bookmark', uselist=False))
 
     def __repr__(self):
         return f'<Bookmark id={self.id}, post_id={self.post_id}>'

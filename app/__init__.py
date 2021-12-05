@@ -16,6 +16,9 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    from app.errors import bp as errors_bp
+    app.register_blueprint(errors_bp)
+
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 

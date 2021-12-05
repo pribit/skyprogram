@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block styles %}
+  {{ super() }}
+  <style>
+    body{
+      animation: changeBg 1s infinite;
+      background-image: url({{ url_for('static', filename='img/500.jpeg') }})
+    }
+    @keyframes changeBg {
+       0% {
+        background-repeat: space;
+       }
+       25% {
+        background-repeat: no-repeat;
+       }
+       50% {
+        background-repeat: revert;
+       }
+       75% {
+        background-repeat: unset;
+       }
+       100% {
+         background-repeat: space;
+       }
+    }
+    #error {
+      animation: blink 0.5s infinite;
+    }
+    @keyframes blink {
+       0% {
+        opacity: 0;
+       }
+       50% {
+         opacity: 100%;
+       }
+       100% {
+        opacity: 0;
+       }
+    }
+  </style>
+{% endblock %}
+
+{% block navbar %}
+  <a href="{{ url_for('main.feed') }}" class="header__logo-link">
+    <svg class="header__logo" width="177" height="26">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#skyprogram"></use>
+    </svg>
+  </a>
+{% endblock %}
+
+{% block app_content %}
+    <h1>Опять работа</h1>
+    <h3 id="error" style="color: #ff0000a1">Ошибка 500</h3>
+{% endblock %}

@@ -25,7 +25,7 @@ def feed():
     )
 
 
-@bp.route('/posts/<post_id>')
+@bp.route('/posts/<int:post_id>')
 def post(post_id: int):
     post: Post = Post.query.filter_by(id=post_id).first_or_404()
 
@@ -53,7 +53,7 @@ def search():
     )
 
 
-@bp.route('/user/<username>')
+@bp.route('/user/<string:username>')
 def user_feed(username: str):
     user: User = User.query.filter_by(username=username).first_or_404()
 
@@ -64,16 +64,41 @@ def user_feed(username: str):
     )
 
 
-@bp.route('/tag/<tag_name>')
+@bp.route('/tag/<string:tag_name>')
 def tag_feed(tag_name: str):
     return render_template('tag.html')
 
 
-@bp.route('/bookmarks/add/<post_id>', methods=['POST'])
+@bp.route('/bookmarks/add/<int:post_id>')
 def add_post_to_bookmarks(post_id: int):
-    return redirect(url_for('/'), code=302)
+    bookmark: Bookmark = Bookmark.query.filter_by(post_id=post_id).first()
+
+    if bookmark:
+        return redirect(url_for('main.feed'), code=302)
+
+    post: Post = Post.query.filter_by(id=post_id).first_or_404()
+
+    db.session.add(Bookmark(post_id=post.id))
+    db.session.commit()
+
+    return redirect(url_for('main.feed'), code=302)
+
+
+@bp.route('/bookmarks/remove/<int:bookmark_id>')
+def remove_post_from_bookmarks(bookmark_id: int):
+    bookmark: Bookmark = Bookmark.query.filter_by(id=bookmark_id).first_or_404()
+
+    db.session.delete(bookmark)
+    db.session.commit()
+
+    return redirect(url_for('main.feed'), code=302)
 
 
 @bp.route('/bookmarks')
 def bookmarks():
-    return render_template('bookmarks.html')
+    bookmarks: Bookmark = Bookmark.query
+
+    return render_template(
+        'bookmarks.html',
+        bookmarks=bookmarks
+    )

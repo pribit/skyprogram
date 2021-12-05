@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+  <a href="{{ url_for('main.feed') }}" class="header__logo-link">
+    <svg class="header__logo" width="177" height="26">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#skyprogram"></use>
+    </svg>
+  </a>
+{% endblock %}
+
+{% block app_content %}
+    <h1>Иди своей дорогой, сталкер</h1>
+    <h3 style="color: #ff0000a1">Ошибка 404</h3>
+    <img style="width: 150%; margin-left: -25%;" src="{{ url_for('static', filename='img/404.png') }}">
+{% endblock %}
