@@ -17,5 +17,6 @@
     {% for post in posts %}
         {% include '_post_in_feed.html' %}
     {% endfor %}
+    <a style="font-size: 8px" href="{{ url_for('main.raise_500') }}">Не трогай, а то всё сломается</a>
   </section>
 {% endblock %}

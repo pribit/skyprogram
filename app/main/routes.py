@@ -102,3 +102,8 @@ def bookmarks():
         'bookmarks.html',
         bookmarks=bookmarks
     )
+
+
+@bp.route('/raise_500')
+def raise_500():
+    raise Exception
