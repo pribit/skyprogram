@@ -1,19 +1,21 @@
-from flask import render_template, request, url_for
+from typing import Union
+
+from flask import render_template, url_for
 from werkzeug.utils import redirect
 
 from app import db
 from app.main import bp
 from app.main.forms import SearchForm
-from app.models import Bookmark, Post
+from app.models import Bookmark, Post, User
 
 
 @bp.route('/')
 def feed():
-    posts = Post.query
+    posts: Post = Post.query
 
     bookmarks_count: int = Bookmark.query.count()
 
-    search_form = SearchForm(csrf_enabled=False)
+    search_form: SearchForm = SearchForm(csrf_enabled=False)
 
     return render_template(
         'index.html',
@@ -25,7 +27,7 @@ def feed():
 
 @bp.route('/posts/<post_id>')
 def post(post_id: int):
-    post = Post.query.filter_by(id=post_id).first_or_404()
+    post: Post = Post.query.filter_by(id=post_id).first_or_404()
 
     return render_template(
         'post.html',
@@ -36,9 +38,9 @@ def post(post_id: int):
 
 @bp.route('/search')
 def search():
-    search_form = SearchForm(csrf_enabled=False)
+    search_form: SearchForm = SearchForm(csrf_enabled=False)
 
-    posts = []
+    posts: Union[list, Post] = []
 
     if search_form.validate():
         posts = Post.query.filter(db.func.lower(Post.content).like(db.func.lower(f'%{search_form.s.data}%'))).limit(10)
@@ -53,7 +55,13 @@ def search():
 
 @bp.route('/user/<username>')
 def user_feed(username: str):
-    return render_template('user-feed.html')
+    user: User = User.query.filter_by(username=username).first_or_404()
+
+    return render_template(
+        'user-feed.html',
+        user=user,
+        title='user feed',
+    )
 
 
 @bp.route('/tag/<tag_name>')
