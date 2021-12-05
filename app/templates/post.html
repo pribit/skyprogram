@@ -29,7 +29,7 @@
         <img src="{{ post.pic }}" alt="" width="348" class="item__post-img">
       </a>
       <div class="item__descr">
-        <p class="item__text">{{ post.content }}</p>
+        <p class="item__text">{{ post.get_content()|safe }}</p>
       </div>
       <div class="item__bottom">
         <div class="item__post-info">

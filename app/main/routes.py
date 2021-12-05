@@ -43,7 +43,7 @@ def search():
     posts: Union[list, Post] = []
 
     if search_form.validate():
-        posts = Post.query.filter(db.func.lower(Post.content).like(db.func.lower(f'%{search_form.s.data}%'))).limit(10)
+        posts = Post.search_by_like(search_form.s.data, limit=10)
 
     return render_template(
         'search.html',
@@ -66,7 +66,14 @@ def user_feed(username: str):
 
 @bp.route('/tag/<string:tag_name>')
 def tag_feed(tag_name: str):
-    return render_template('tag.html')
+    posts: Post = Post.search_by_like(tag_name, limit=None)
+
+    return render_template(
+        'tag-feed.html',
+        tag_name=tag_name,
+        posts=posts,
+        title='tag'
+    )
 
 
 @bp.route('/bookmarks/add/<int:post_id>')

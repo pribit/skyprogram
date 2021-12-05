@@ -1,4 +1,23 @@
+import re
+from typing import Optional
+
+from flask import url_for
+
 from app import db
+
+
+def add_links_to_hash_tags(text: str):
+    hash_tag_regexp = re.compile('\\B(#(?:\\w|\\d)+\\b)')
+    hash_tags = re.findall(hash_tag_regexp, text)
+
+    for hash_tag in hash_tags:
+        text = text.replace(
+            hash_tag,
+            f'<a class="item__tag" href="{url_for("main.tag_feed", tag_name=hash_tag)}">{hash_tag}</a>',
+            1
+        )
+
+    return text
 
 
 class User(db.Model):
@@ -23,11 +42,25 @@ class Post(db.Model):
 
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
 
-    def get_content(self):
-        if len(self.content) <= 50:
-            return self.content
-        else:
-            return f'{self.content[:50]}...'
+    @staticmethod
+    def search_by_like(looking_for: str, limit: Optional[int]):
+        posts: Post = Post.query.filter(db.func.lower(Post.content).like(db.func.lower(f'%{looking_for}%')))
+
+        if limit:
+            posts = posts.limit(limit)
+
+        return posts
+
+    def get_content(self, minify: bool = False):
+        content = add_links_to_hash_tags(self.content)
+
+        if minify:
+            if len(content) <= 50:
+                return content
+
+            return f'{content[:50]}...'
+
+        return content
 
     def get_comment_count_string(self) -> str:
         comments_count: int = self.comments.count()
@@ -68,6 +101,9 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     comment = db.Column(db.Text)
+
+    def get_comment(self):
+        return add_links_to_hash_tags(self.comment)
 
     def __repr__(self):
         return f'<Comment id={self.id}, post_id={self.post_id}> ' + \

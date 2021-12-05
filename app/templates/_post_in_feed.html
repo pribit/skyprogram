@@ -3,7 +3,7 @@
   <a href="{{ url_for('main.post', post_id=post.id) }}" class="item__post-link">
     <img src="{{ post.pic }}" alt="" width="348" class="item__post-img">
   </a>
-  <p class="item__descr">{{ post.get_content() }}</p>
+  <p class="item__descr">{{ post.get_content(minify=True)|safe }}</p>
   <div class="item__post-info">
     <p class="item__comments-counter">{{ post.get_comment_count_string() }}</p>
     <div class="item__counter">
