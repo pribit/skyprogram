@@ -13,3 +13,7 @@ def make_shell_context():
         'Bookmark': Bookmark,
         'Comment': Comment,
     }
+
+
+if __name__ == '__main__':
+    app.run()

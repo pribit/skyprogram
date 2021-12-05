@@ -1,18 +1,25 @@
 from flask import render_template, request, url_for
 from werkzeug.utils import redirect
 
+from app import db
 from app.main import bp
+from app.main.forms import SearchForm
 from app.models import Bookmark, Post
 
 
 @bp.route('/')
 def feed():
     posts = Post.query
+
     bookmarks_count: int = Bookmark.query.count()
+
+    search_form = SearchForm(csrf_enabled=False)
+
     return render_template(
         'index.html',
         posts=posts,
-        bookmarks_count=bookmarks_count
+        bookmarks_count=bookmarks_count,
+        search_form=search_form,
     )
 
 
@@ -29,8 +36,19 @@ def post(post_id: int):
 
 @bp.route('/search')
 def search():
-    looking_for = request.args.get('s')
-    return render_template('search.html')
+    search_form = SearchForm(csrf_enabled=False)
+
+    posts = []
+
+    if search_form.validate():
+        posts = Post.query.filter(db.func.lower(Post.content).like(db.func.lower(f'%{search_form.s.data}%'))).limit(10)
+
+    return render_template(
+        'search.html',
+        posts=posts,
+        search_form=search_form,
+        title='search',
+    )
 
 
 @bp.route('/user/<username>')

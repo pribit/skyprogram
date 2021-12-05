@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+  <a href="{{ url_for('main.feed') }}" class="header__btn-back">
+    <svg class="header__btn-icon" width="19" height="16">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#back"></use>
+    </svg>
+  </a>
+  <a href="{{ url_for('main.search') }}" class="header__logo-link">
+    <svg class="header__logo" width="100" height="26">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
+    </svg>
+  </a>
+{% endblock %}
+
+{% block search_form %}
+  {{ super() }}
+  <p class="search__results">Найдено постов: {{ posts.count() if posts else 0 }}</p>
+{% endblock %}
+
+{% block app_content %}
+  {% for post in posts %}
+    {% include '_post_in_feed.html' %}
+  {% endfor %}
+{% endblock %}

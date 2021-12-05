@@ -49,6 +49,9 @@ class Post(db.Model):
                f'content={self.content if len(self.content) <= 39 else f"{self.content[:39]}..."}'
 
 
+db.Index('post_lower_content_idx', db.func.lower(Post.__table__.c.content))
+
+
 class Bookmark(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
