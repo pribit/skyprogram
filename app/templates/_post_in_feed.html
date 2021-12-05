@@ -1,0 +1,27 @@
+<div class="items__item item">
+  <div class="item__top">
+    <a href="{{ url_for('main.user_feed', username=post.author.username) }}" class="item__head">
+      <div class="item__ava-wrap">
+        <img src="{{ post.author.avatar }}" alt="" class="item__ava" width="47">
+      </div>
+      <span class="item__username">{{ post.author.username }}</span>
+    </a>
+  </div>
+  <a href="{{ url_for('main.post', post_id=post.id) }}" class="item__post-link">
+    <img src="{{ post.pic }}" alt="" width="348" class="item__post-img">
+  </a>
+  <p class="item__descr">{{ post.get_content() }}</p>
+  <div class="item__post-info">
+    <p class="item__comments-counter">{{ post.get_comment_count_string() }}</p>
+    <div class="item__counter">
+      <img src="{{ url_for('static', filename='img/eye.png') }}" alt="" class="item__counter-icon" width="26">
+      <span class="item__counter-text">{{ post.views_count }}</span>
+    </div>
+  </div>
+  <div class="item__post-bottom">
+    <a href="{{ url_for('main.post', post_id=post.id) }}" class="item__btn-more">Подробнее</a>
+    <button type="button" class="item__bookmark-btn">
+      <img src="{{ url_for('static', filename='img/bookmark.png') }}" alt="" class="item__bookmark-icon" width="24">
+    </button>
+  </div>
+</div>

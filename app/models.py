@@ -7,6 +7,9 @@ class User(db.Model):
     username = db.Column(db.String(63), index=True, unique=True)
     avatar = db.Column(db.String, nullable=True)
 
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
+
 
 class Post(db.Model):
     __searchable__ = ['content']
@@ -19,6 +22,27 @@ class Post(db.Model):
     likes_count = db.Column(db.Integer)
     views_count = db.Column(db.Integer)
     pic = db.Column(db.String)
+
+    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+
+    def get_content(self):
+        if len(self.content) <= 50:
+            return self.content
+        else:
+            return f'{self.content[:50]}...'
+
+    def get_comment_count_string(self) -> str:
+        comments_count: int = self.comments.count()
+
+        if comments_count == 0:
+            return 'Нет комментариев'
+        else:
+            if 2 <= comments_count % 10 <= 4 and not 12 <= comments_count % 100 <= 14:
+                return f'{comments_count} комментария'
+            elif comments_count % 10 == 1 and comments_count % 100 != 11:
+                return f'{comments_count} комментарий'
+            else:
+                return f'{comments_count} комментариев'
 
     def __repr__(self):
         return f'<Post id={self.id}, user_id={self.user_id}, ' + \

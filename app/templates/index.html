@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+  <a href="{{ url_for('main.feed') }}" class="header__logo-link">
+    <svg class="header__logo" width="177" height="26">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#skyprogram"></use>
+    </svg>
+  </a>
+  <a href="{{ url_for('main.bookmarks') }}" class="header__bookmark-btn">
+    <img src="{{ url_for('static', filename='img/bookmark.png') }}" alt="" class="header__bookmark-icon" width="28">
+    <span class="header__bookmark-counter">{{ bookmarks_count }}</span>
+  </a>
+{% endblock %}
+
+{% block app_content %}
+  <section class="items">
+    {% for post in posts %}
+        {% include '_post_in_feed.html' %}
+    {% endfor %}
+  </section>
+{% endblock %}
