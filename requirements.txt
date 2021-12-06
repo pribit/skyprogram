@@ -11,6 +11,6 @@ SQLAlchemy==1.4.27
 WTForms==3.0.0
 python-dotenv==0.19.2
 
-# requirements for Heroku
-#psycopg2==2.9.1
-#gunicorn==20.1.0
+# heroku
+psycopg2==2.9.2
+gunicorn==20.1.0
