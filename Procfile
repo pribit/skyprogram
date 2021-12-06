@@ -1,1 +1,1 @@
-web: flask db upgrade; gunicorn skyprogram:app
+web: flask db upgrade --x-arg data=True; gunicorn skyprogram:app
